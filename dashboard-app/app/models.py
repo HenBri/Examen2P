@@ -9,13 +9,14 @@ class Categoria(Model):
     nombre = Column(String(100), nullable=False)
     descripcion = Column(Text, nullable=True)
     imagen = Column(String(255), nullable=True)
-    estado = Column(Boolean, nullable=True)
-    creado_en = Column(DateTime, default=datetime.UTC, nullable=False)
-    actualizado_en = Column(DateTime, default=datetime.UTC, onupdate=datetime.UTC, nullable=False)
+    estado = Column(Boolean, default=True)
+    creado_en = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    actualizado_en = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow, nullable=False)
     
+    # RELACIÓN CORREGIDA: Se cambió "productos" apuntando a "categoria" en singular
     productos = relationship(
         "Producto",
-        back_populates="categorias"
+        back_populates="categoria"
     )
     
     def __repr__(self):
@@ -29,11 +30,12 @@ class Producto(Model):
     precio = Column(Numeric(10, 2), nullable=True)
     categoria_id = Column(Integer, ForeignKey("categoria.id"), nullable=False)
     imagen = Column(String(255), nullable=True)
-    estado = Column(Boolean, nullable=True)
-    creado_en = Column(DateTime, default=datetime.UTC, nullable=False)
-    actualizado_en = Column(DateTime, default=datetime.UTC, onupdate=datetime.UTC, nullable=False)
+    estado = Column(Boolean, default=True)
+    creado_en = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    actualizado_en = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow, nullable=False)
     
-    categorias = relationship(
+    # RELACIÓN CORREGIDA: Cambiado de "categorias" (plural) a "categoria" (singular)
+    categoria = relationship(
         "Categoria",
         back_populates="productos"
     )
@@ -48,4 +50,5 @@ class Venta(Model):
     cantidad = Column(Integer, nullable=False)
     precio_unitario = Column(Numeric(10, 2), nullable=True)
     total = Column(Numeric(10, 2), nullable=True)
-    fecha = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.UTC, nullable=False)
+    # CORRECCIÓN DE FECHA: Se estandarizó el uso de datetime para evitar conflictos
+    fecha = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)

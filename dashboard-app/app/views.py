@@ -35,20 +35,21 @@ class ProductoModelView(ModelView):
     add_title = "Registrar Producto"
     edit_title = "Modificar Producto"
 
+    # CORRECCIÓN AQUÍ: Se cambiaron las referencias a "categorias" por "categoria" (singular)
     label_columns = {
         "nombre": "Nombre del Producto",
         "descripcion": "Descripción General",
         "precio": "Precio Unitario (Bs.)",
-        "categorias": "Categoría Asignada",
+        "categoria": "Categoría Asignada",  
         "imagen": "Fotografía / Imagen",
         "estado": "En Stock / Disponible",
         "creado_en": "Fecha de Registro",
         "actualizado_en": "Última Modificación",
     }
-    list_columns = ["nombre", "precio", "categorias", "estado"]
-    add_columns = ["nombre", "descripcion", "precio", "categorias", "imagen", "estado"]
-    edit_columns = ["nombre", "descripcion", "precio", "categorias", "imagen", "estado"]
-    show_columns = ["nombre", "descripcion", "precio", "categorias", "imagen", "estado", "creado_en", "actualizado_en"]
+    list_columns = ["nombre", "precio", "categoria", "estado"]  
+    add_columns = ["nombre", "descripcion", "precio", "categoria", "imagen", "estado"]  
+    edit_columns = ["nombre", "descripcion", "precio", "categoria", "imagen", "estado"]  
+    show_columns = ["nombre", "descripcion", "precio", "categoria", "imagen", "estado", "creado_en", "actualizado_en"]  
 
 
 class VentaModelView(ModelView):
@@ -71,7 +72,7 @@ class VentaModelView(ModelView):
     edit_columns = ["producto", "cantidad", "precio_unitario", "total"]
 
 
-# REPORTES
+# REPORTES (Base inicial que avanzó tu compañero)
 class ReporteView(BaseView):
     route_base = "/reportes"
 
@@ -92,6 +93,7 @@ class ReporteView(BaseView):
         )
 
 
+# MENÚS DE NAVEGACIÓN COMPLETOS
 appbuilder.add_view(
     CategoriaModelView,
     "Categorías",
