@@ -1,7 +1,7 @@
-import datetime
 from flask_appbuilder import Model
 from sqlalchemy import Boolean, Column, DateTime, Integer, Numeric, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 class Categoria(Model):
     __tablename__ = "categoria"
@@ -10,8 +10,8 @@ class Categoria(Model):
     descripcion = Column(Text, nullable=True)
     imagen = Column(String(255), nullable=True)
     estado = Column(Boolean, nullable=True)
-    creado_en = Column(DateTime, default=datetime.UTC, nullable=False)
-    actualizado_en = Column(DateTime, default=datetime.UTC, onupdate=datetime.UTC, nullable=False)
+    creado_en = Column(DateTime, default=func.now(), nullable=False)
+    actualizado_en = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
     
     productos = relationship(
         "Producto",
@@ -30,8 +30,8 @@ class Producto(Model):
     categoria_id = Column(Integer, ForeignKey("categoria.id"), nullable=False)
     imagen = Column(String(255), nullable=True)
     estado = Column(Boolean, nullable=True)
-    creado_en = Column(DateTime, default=datetime.UTC, nullable=False)
-    actualizado_en = Column(DateTime, default=datetime.UTC, onupdate=datetime.UTC, nullable=False)
+    creado_en = Column(DateTime, default=func.now(), nullable=False)
+    actualizado_en = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
     
     categorias = relationship(
         "Categoria",
@@ -48,4 +48,4 @@ class Venta(Model):
     cantidad = Column(Integer, nullable=False)
     precio_unitario = Column(Numeric(10, 2), nullable=True)
     total = Column(Numeric(10, 2), nullable=True)
-    fecha = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.UTC, nullable=False)
+    fecha = Column(DateTime, default=func.now(), nullable=False)
