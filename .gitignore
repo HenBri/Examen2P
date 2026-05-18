@@ -28,7 +28,7 @@ bin-release/
 instance/*
 !instance/.gitignore
 .webassets-cache
-.env
+
 
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
@@ -58,6 +58,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+.env
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -283,3 +284,5 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/flask,python,flashbuilder
+
+.env
