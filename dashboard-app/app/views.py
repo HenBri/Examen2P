@@ -21,6 +21,10 @@ class CategoriaModelView(ModelView):
         "creado_en": "Fecha de Creación",
         "actualizado_en": "Última Actualización",
     }
+    formatters_columns = {
+        "creado_en": lambda x: x.strftime("%d/%m/%Y %H:%M") if x else "",
+        "actualizado_en": lambda x: x.strftime("%d/%m/%Y %H:%M") if x else "",
+    }
     list_columns = ["nombre", "descripcion", "estado", "creado_en"]
     add_columns = ["nombre", "descripcion", "imagen", "estado"]
     edit_columns = ["nombre", "descripcion", "imagen", "estado"]
@@ -38,12 +42,17 @@ class ProductoModelView(ModelView):
     label_columns = {
         "nombre": "Nombre del Producto",
         "descripcion": "Descripción General",
-        "precio": "Precio Unitario (Bs.)",
+        "precio": "Precio Unitario",
         "categorias": "Categoría Asignada",
         "imagen": "Fotografía / Imagen",
         "estado": "En Stock / Disponible",
         "creado_en": "Fecha de Registro",
         "actualizado_en": "Última Modificación",
+    }
+    formatters_columns = {
+        "creado_en": lambda x: x.strftime("%d/%m/%Y %H:%M") if x else "",
+        "actualizado_en": lambda x: x.strftime("%d/%m/%Y %H:%M") if x else "",
+        "precio": lambda x: f"{x:,.2f} Bs." if x is not None else "",
     }
     list_columns = ["nombre", "precio", "categorias", "estado"]
     add_columns = ["nombre", "descripcion", "precio", "categorias", "imagen", "estado"]
@@ -62,9 +71,14 @@ class VentaModelView(ModelView):
     label_columns = {
         "producto": "Producto Vendido",
         "cantidad": "Cantidad (Unid.)",
-        "precio_unitario": "Precio Unitario (Bs.)",
-        "total": "Monto Total (Bs.)",
+        "precio_unitario": "Precio Unitario",
+        "total": "Monto Total",
         "fecha": "Fecha de Venta",
+    }
+    formatters_columns = {
+        "fecha": lambda x: x.strftime("%d/%m/%Y %H:%M") if x else "",
+        "precio_unitario": lambda x: f"{x:,.2f} Bs." if x is not None else "",
+        "total": lambda x: f"{x:,.2f} Bs." if x is not None else "",
     }
     list_columns = ["producto", "cantidad", "precio_unitario", "total", "fecha"]
     add_columns = ["producto", "cantidad", "precio_unitario", "total"]
