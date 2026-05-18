@@ -1,0 +1,206 @@
+{% extends "appbuilder/baselayout.html" %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    .report-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .report-card {
+        background: white;
+        padding: 32px;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(14, 165, 233, 0.06);
+        border: 1px solid #e2e8f0;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .report-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(14, 165, 233, 0.15);
+    }
+
+    .report-card h3 {
+        color: #64748b;
+        margin-bottom: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .report-card p {
+        font-size: 36px;
+        font-weight: 800;
+        color: var(--primary-sky);
+        margin: 0;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .report-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+
+    .report-box {
+        background: white;
+        padding: 36px;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(14, 165, 233, 0.06);
+        border: 1px solid #e2e8f0;
+    }
+
+    .report-box h2 {
+        margin-bottom: 24px;
+        color: #0f172a;
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .product-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .product-item {
+        padding: 16px 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        color: #334155;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+    }
+
+    .product-item:hover {
+        background: var(--primary-sky-light);
+        border-color: var(--primary-sky);
+        color: var(--primary-sky-hover);
+        transform: translateX(4px);
+    }
+
+    .product-badge {
+        background: var(--primary-sky);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    @media(max-width: 992px){
+        .report-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Encabezado de la página de reportes -->
+<div class="well" style="background: linear-gradient(135deg, var(--primary-sky), #0284c7) !important; color: white !important; border: none !important;">
+    <h1 style="color: white; font-size: 32px; margin-bottom: 8px;">📊 Reporte General de Ventas</h1>
+    <p style="font-size: 16px; opacity: 0.9; margin: 0;">Métricas clave, desempeño por producto e ingresos totales</p>
+</div>
+
+<!-- Tarjetas de resumen -->
+<div class="report-cards">
+    <div class="report-card">
+        <h3>Total de Ventas Registradas</h3>
+        <p>{{ t_ventas }}</p>
+    </div>
+    <div class="report-card">
+        <h3>Ingresos Totales Brutos</h3>
+        <p>Bs. {{ t_ingresos }}</p>
+    </div>
+</div>
+
+<!-- Contenido detallado -->
+<div class="report-grid">
+    <!-- Lista de Ventas por Producto -->
+    <div class="report-box">
+        <h2>📦 Desglose de Ventas por Producto</h2>
+        <ul class="product-list">
+            {% for item in venta_por_producto %}
+                <li class="product-item">
+                    <span>{{ item[0] }}</span>
+                    <span class="product-badge">{{ item[1] }} unid.</span>
+                </li>
+            {% else %}
+                <li class="product-item" style="justify-content: center; color: #94a3b8;">No hay ventas registradas aún</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Gráfico de Ventas -->
+    <div class="report-box">
+        <h2>📈 Comparativa Gráfica</h2>
+        <div style="position: relative; width: 100%; height: 350px;">
+            <canvas id="grafica"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+window.addEventListener("load", function() {
+    const canvasElement = document.getElementById('grafica');
+    if (!canvasElement) return;
+    const ctx = canvasElement.getContext('2d');
+
+    const labels = {{ venta_por_producto | map(attribute=0) | list | tojson }};
+    const data = {{ venta_por_producto | map(attribute=1) | list | tojson }};
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Unidades Vendidas',
+                data: data,
+                backgroundColor: [
+                    '#0ea5e9',
+                    '#38bdf8',
+                    '#0284c7',
+                    '#0369a1',
+                    '#7dd3fc',
+                    '#bae6fd'
+                ],
+                borderRadius: 10,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { borderDash: [5, 5] }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
