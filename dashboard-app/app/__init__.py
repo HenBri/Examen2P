@@ -9,7 +9,7 @@ def create_app() -> Flask:
     
     db.init_app(app)
     with app.app_context():
-        from .models import Categoria, Producto
+        from .models import Categoria, Producto, Venta, Proveedor
         db.create_all()
         appbuilder.init_app(app, db.session)
         from . import views
