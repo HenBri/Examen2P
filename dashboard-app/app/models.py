@@ -49,3 +49,19 @@ class Venta(Model):
     precio_unitario = Column(Numeric(10, 2), nullable=True)
     total = Column(Numeric(10, 2), nullable=True)
     fecha = Column(DateTime, default=func.now(), nullable=False)
+
+
+class Proveedor(Model):
+    __tablename__ = "proveedor"
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String(150), nullable=False)
+    contacto = Column(String(100), nullable=True)
+    telefono = Column(String(50), nullable=True)
+    email = Column(String(100), nullable=True)
+    direccion = Column(Text, nullable=True)
+    estado = Column(Boolean, default=True, nullable=True)
+    creado_en = Column(DateTime, default=func.now(), nullable=False)
+    actualizado_en = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
+    
+    def __repr__(self):
+        return self.nombre

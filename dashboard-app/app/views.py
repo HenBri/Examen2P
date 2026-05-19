@@ -2,7 +2,7 @@ from flask_appbuilder import BaseView, ModelView, expose
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 
 from .extensions import appbuilder, db
-from .models import Categoria, Producto, Venta
+from .models import Categoria, Producto, Proveedor, Venta
 
 
 class CategoriaModelView(ModelView):
@@ -85,6 +85,35 @@ class VentaModelView(ModelView):
     edit_columns = ["producto", "cantidad", "precio_unitario", "total"]
 
 
+class ProveedorModelView(ModelView):
+    datamodel = SQLAInterface(Proveedor)
+    base_title = "Proveedores"
+    list_title = "Lista de Proveedores"
+    show_title = "Detalle del Proveedor"
+    add_title = "Nuevo Proveedor"
+    edit_title = "Editar Proveedor"
+
+    label_columns = {
+        "nombre": "Nombre / Razón Social",
+        "contacto": "Contacto Principal",
+        "telefono": "Teléfono",
+        "email": "Correo Electrónico",
+        "direccion": "Dirección",
+        "estado": "Activo / Disponible",
+        "creado_en": "Fecha de Registro",
+        "actualizado_en": "Última Actualización",
+    }
+    formatters_columns = {
+        "creado_en": lambda x: x.strftime("%d/%m/%Y %H:%M") if x else "",
+        "actualizado_en": lambda x: x.strftime("%d/%m/%Y %H:%M") if x else "",
+    }
+    list_columns = ["nombre", "contacto", "telefono", "email", "estado"]
+    add_columns = ["nombre", "contacto", "telefono", "email", "direccion", "estado"]
+    edit_columns = ["nombre", "contacto", "telefono", "email", "direccion", "estado"]
+    show_columns = ["nombre", "contacto", "telefono", "email", "direccion", "estado", "creado_en", "actualizado_en"]
+
+
+
 # REPORTES
 class ReporteView(BaseView):
     route_base = "/reportes"
@@ -118,6 +147,14 @@ appbuilder.add_view(
     ProductoModelView,
     "Productos",
     icon="fa-cube",
+    category="Gestión de Inventario",
+    category_icon="fa-cubes",
+)
+
+appbuilder.add_view(
+    ProveedorModelView,
+    "Proveedores",
+    icon="fa-truck",
     category="Gestión de Inventario",
     category_icon="fa-cubes",
 )
